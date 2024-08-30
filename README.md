@@ -3,6 +3,23 @@
 The original implementation of the `CLi_Vector` and `CLi_Matrix` headers use regular for-loops for dot product, matrix multiplication, etc.
 In this repo I've made some experiments rewriting those using BLAS and compare run times, etc.
 
+## Build instructions
+
+Linux Dependencies:
+```bash
+sudo apt install libopenblas-dev
+```
+(on macOS, the system `Accelerate.framework` is used)
+
+Linux and Mac:
+```bash
+git clone https://github.com/martinjankoehler/LinAlgebraTest --recursive
+cd LinAlgebraTest
+make
+```
+
+## Example test run
+
 Here's the first result on a MacBook Pro M3 with 11 cores, using Apple's Accelerate Framework (which contains BLAS implementations):
 ```
 ------------------
