@@ -2,7 +2,7 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
 	BLAS_OPTIONS = -DLINALG_USE_ACCELERATE=1 -DACCELERATE_NEW_LAPACK=1 -DACCELERATE_LAPACK_ILP64=1 -framework Accelerate 
 else
-	BLAS_OPTIONS = -lopenblas
+	BLAS_OPTIONS = -lblas
 endif
 
 
@@ -20,8 +20,8 @@ linalgebra_test_orig: LinAlgebraTest.cpp build_LinAlgebra_orig_Release/libLinAlg
 linalgebra_test_mjk: LinAlgebraTest.cpp build_LinAlgebra_MJK_Release/libLinAlgebra.a
 	$(CXX) -O3 \
 		-ILinAlgebra_MJK \
-		$(BLAS_OPTIONS) \
-		-o $@ $^
+		-o $@ $^ \
+		$(BLAS_OPTIONS)
 
 test: linalgebra_test_orig linalgebra_test_mjk
 	@echo "------------------"
@@ -32,7 +32,7 @@ test: linalgebra_test_orig linalgebra_test_mjk
 	@echo "------------------"
 	@echo "---     MJK    ---"
 	@echo "------------------"
-	./linalgebra_test_MJK
+	./linalgebra_test_mjk
 
 clean:
 	rm -rf  \
