@@ -1,0 +1,6 @@
+[submodule "LinAlgebra_MJK"]
+	path = LinAlgebra_MJK
+	url = https://github.com/martinjankoehler/LinAlgebra
+[submodule "LinAlgebra_orig"]
+	path = LinAlgebra_orig
+	url = https://github.com/ediloren/LinAlgebra
