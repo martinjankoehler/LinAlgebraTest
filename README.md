@@ -1,6 +1,9 @@
 # Compare LinAlgebra implementations 
 
+The capacitance field solver [FasterCap](https://github.com/ediloren/FasterCap) uses the [LinAlgebra](https://github.com/ediloren/LinAlgebra) library.
+
 The original implementation of the `CLi_Vector` and `CLi_Matrix` headers use regular for-loops for dot product, matrix multiplication, etc.
+
 In this repo I've made some experiments rewriting those using BLAS and compare run times, etc.
 
 ## Build instructions
