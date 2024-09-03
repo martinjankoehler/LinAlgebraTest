@@ -21,6 +21,14 @@ make
 ## Example test run
 
 Here's the first result on a MacBook Pro M3 with 11 cores, using Apple's Accelerate Framework (which contains BLAS implementations):
+
+| Function                          | FasterCap (Original) | FasterCap (BLAS mods) |
+| --------------------------------- | -------------------- | ------------------------- |
+| dot_prod(Vector, Vector)          | 126ms                | 39ms                      |
+| matmult(Matrix, Matrix)           | 1024ms               | 5ms                       |
+| matmult(Matrix, Matrix, Matrix)   | 1021ms               | 5ms                       |
+| matmult(Matrix, Vector)           | 1024µs               | 911µs                     |
+
 ```
 ------------------
 ---  ORIGINAL  ---
