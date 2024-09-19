@@ -1,5 +1,6 @@
 #include <chrono>
 #include <iostream>
+#include <fstream>
 #include <vector>
 
 #include "Vect.h"
@@ -23,7 +24,17 @@ void log(const std::chrono::steady_clock::time_point &begin,
               << std::endl << std::endl;
 }
 
-void test_vector() {
+template <typename T>
+void dump(const T &t, const char *prefix, const char *topic) {
+    std::string filename = prefix;
+    filename += topic;
+    std::ofstream outputStream(filename, std::ios::binary);
+    outputStream << t;
+    outputStream.flush();
+    outputStream.close();
+}
+
+void test_vector(const char *dumpPrefix) {
     const size_t N = 100000000;
     
     std::cout << "Preparing vectors of size " << N << "…" << std::endl << std::endl;
@@ -46,6 +57,7 @@ void test_vector() {
         double result = dot_prod(A, B);
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
         std::cout << "Result: " << result << std::endl;
+        dump(result, dumpPrefix, "dot_prod");
         log(begin, end);
     }
     
@@ -131,7 +143,7 @@ void test_vector() {
     //    }
 }
 
-void test_matrix() {
+void test_matrix(const char *dumpPrefix) {
     const size_t N = 1000;
     std::cout << "Preparing matrix of size " << N << "…" << std::endl << std::endl;
 
@@ -154,6 +166,7 @@ void test_matrix() {
         CLin_Matrix C = matmult(M, M);
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
         std::cout << "Result: " << C[0][0] << ", " << C[0][N-1] << ", " << C[N-1][N-1] << std::endl;
+        dump(C, dumpPrefix, "matmult_M_M");
         log(begin, end);
         
         std::cout << "Testing matrix multiplication matmult(C, M, M)…" << std::endl;
@@ -162,6 +175,7 @@ void test_matrix() {
         matmult(C, M, M);
         end = std::chrono::steady_clock::now();
         std::cout << "Result: " << C[0][0] << ", " << C[0][N-1] << ", " << C[N-1][N-1] << std::endl;
+        dump(C, dumpPrefix, "matmult_C_M_M");
         log(begin, end);
 
     }
@@ -173,33 +187,40 @@ void test_matrix() {
         CLin_Vector C = matmult(M, K);
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
         std::cout << "Result: " << C[0] << ", " << C[N-1] << std::endl;
-        log(begin, end);
-    }
-
-    {
-        std::cout << "Testing frobenius norm Fnorm(M)…" << std::endl;
-        
-        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        double result = FNorm(M);
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        std::cout << "Result: " << result << std::endl;
+        dump(C, dumpPrefix, "matmult_M_K");
         log(begin, end);
     }
     
-    {
-        std::cout << "Testing frobenius norm Fnorm(M)…" << std::endl;
-        
-        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        double result = FNorm(M, M);
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        std::cout << "Result: " << result << std::endl;
-        log(begin, end);
-    }
+//    {
+//        std::cout << "Testing frobenius norm Fnorm(M)…" << std::endl;
+//        
+//        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+//        double result = FNorm(M);
+//        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+//        std::cout << "Result: " << result << std::endl;
+//        log(begin, end);
+//    }
+//    
+//    {
+//        std::cout << "Testing frobenius norm Fnorm(M)…" << std::endl;
+//        
+//        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+//        double result = FNorm(M, M);
+//        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+//        std::cout << "Result: " << result << std::endl;
+//        log(begin, end);
+//    }
 }
 
 int main(int argc, char **argv) {
-    test_vector();
-    test_matrix();
+    if (argc <= 1) {
+        std::cerr << "Usage: " << argv[0] << " " << "<dump_prefix>" << std::endl;
+        return -1;
+    }
+    const char *dumpPrefix = argv[1];
+    
+    test_vector(dumpPrefix);
+    test_matrix(dumpPrefix);
     
     return 0;
 }

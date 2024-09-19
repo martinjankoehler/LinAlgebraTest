@@ -6,7 +6,7 @@ else
 endif
 
 
-all: build_libs test
+all: build_libs test diff
 
 build_libs:
 	./build-libs.sh
@@ -23,16 +23,23 @@ linalgebra_test_mjk: LinAlgebraTest.cpp build_LinAlgebra_MJK_Release/libLinAlgeb
 		-o $@ $^ \
 		$(BLAS_OPTIONS)
 
+
+TESTS = dot_prod matmult_C_M_M matmult_M_K matmult_M_M
+
 test: linalgebra_test_orig linalgebra_test_mjk
 	@echo "------------------"
 	@echo "---  ORIGINAL  ---"
 	@echo "------------------"
-	./linalgebra_test_orig
+	./linalgebra_test_orig result_orig_
 	
 	@echo "------------------"
 	@echo "---     MJK    ---"
 	@echo "------------------"
-	./linalgebra_test_mjk
+	./linalgebra_test_mjk result_mjk_
+
+
+diff:
+	$(foreach test,$(TESTS),@diff result_mjk_$(test) result_orig_$(test) && echo "PASS: result data matches for $(test)" || echo "ERROR: result data mismatch for $(test)")
 
 clean:
 	rm -rf  \
